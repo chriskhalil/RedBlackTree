@@ -38,10 +38,13 @@ private:
 	void fixRbtInsert(Node<T>*);
 	void fixRbtDelete(Node<T>*);
 	void DeleteTree(Node<T>*);
+
+	
 public:
 	RedBlackTree();
 	void insert(T);
 	void remove(T);
+	const Node<T>* Find(T);
 	std::string print();
 	
 	~RedBlackTree() {
@@ -168,7 +171,7 @@ inline void RedBlackTree<T>::rightRotate(Node<T>*x, Node<T>*y)
 }
 
 template<typename T>
-inline void RedBlackTree<T>::fixRbtInput(Node<T>*node)
+inline void RedBlackTree<T>::fixRbtInsert(Node<T>*node)
 {
 	while (  node->parent != nullptr && node->parent->color == Red) {
 		if (node->parent == node->parent->parent->left)
@@ -231,17 +234,41 @@ inline void RedBlackTree<T>::insert(const T element) {
 	//check red black tree for violation
 	//do not fix if we insert root
 	if(_count >1)
-	fixRBTInsert(temporal_node);
+	fixRbtInsert(temporal_node);
 }
 
+template<typename T>
+inline const Node<T>* RedBlackTree<T>::Find(T element) {
+	auto node = _root;
+	if (_root == nullptr) return nullptr;
+	while (node != nullptr) {
+		if (element < node->data) {
+			std::cout << "At node " << node->data << " going left\n";
+			node = node->left;
+		}
+		else if (element > node->data) {
+			std::cout << "At node " << node->data << " going right\n";
+			node = node->right;
+		}
+		else {
+			std::cout << "Found node " << node->data << " terminated\n";
+			return node;
+		}
+	}
+	std::cout << "The tree does not contain node with key:" << element << "\n";
+	return nullptr;
+}
 
 template<typename T>
 inline void RedBlackTree<T>::fixRbtDelete(Node<T>*)
 {
+
 }
 template<typename T>
 inline void RedBlackTree<T>::remove(T)
 {
+	if (_root == nullptr)return;
+	_count--;
 
 }
 

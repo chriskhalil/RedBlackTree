@@ -10,9 +10,14 @@ int main() {
 	dt.insert(15);
 	dt.insert(5);
 	dt.insert(8);
-	//std::cout<<dt.print()<<"\n";
+	std::cout<<dt.print()<<"\n";
 	dt.insert(4);
-	std::cout << dt.print() << "\n";
+	std::cout <<"\nInsert 4\n"<< dt.print() << "\n";
+	std::cout << "---------------------------------------------\n";
+	dt.Find(5);
+	std::cout << "---------------------------------------------\n";
+	dt.Find(400);
+	std::cout << "---------------------------------------------\n";
 	return 0;
 }
 
