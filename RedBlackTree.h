@@ -8,24 +8,15 @@ enum Color :bool { Black = 0, Red = 1 };
 template<typename T>
 struct Node {
 	T data;
-	Node<T>* parent;
-	Node<T>* left;
-	Node<T>* right;
+	Node* parent;
+	Node* left;
+	Node* right;
+	bool is_nil;
 	bool color;
-	Node(const T&);
-	~Node();
+	Node(T elm, Node* p = nullptr, Node* l = nullptr, Node* r = nullptr)
+		:data(elm), parent(p), left(l), right(r), is_nil(0), color(Red) {}
 };
-template<typename T>
-Node<T>::Node(const T& element) {
-	data = element;
-	color = Red;
-	parent = left = right = nullptr;
-}
-template<typename T>
-Node<T>::~Node() {
-	//Todo 1_ex
-	std::cout << "node with data:" << data << " deleted\n";
-}
+
 
 template<typename T>
 class RedBlackTree {
@@ -135,7 +126,8 @@ inline void RedBlackTree<T>::leftRotate(Node<T>*x, Node<T>*y)
 {
 	auto temp = y->right;
 	y->right = temp->left;
-	temp->left->parent = y;
+	if(y->right != nullptr)
+	 temp->left->parent = y;
 	temp->parent = y->parent;
 	if (y->parent == nullptr)
 		x->parent = temp;
@@ -157,7 +149,8 @@ inline void RedBlackTree<T>::rightRotate(Node<T>*x, Node<T>*y)
 {
 	auto temp = y->left;
 	y->left = temp->right;
-	temp->right->parent = y;
+	if (y->left != nullptr)
+	 temp->right->parent = y;
 	temp->parent = y->parent;
 	if (y->parent == nullptr)
 		x->parent = temp;
