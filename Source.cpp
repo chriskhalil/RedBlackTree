@@ -18,6 +18,9 @@ int main() {
 	std::cout << "---------------------------------------------\n";
 	dt.Find(400);
 	std::cout << "---------------------------------------------\n";
+	std::cout << "InOrder Traversal: ";
+	dt.inOrderTraversal(dt.GetRoot());
+	std::cout << "\n---------------------------------------------\n";
 	return 0;
 }
 

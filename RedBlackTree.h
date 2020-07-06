@@ -46,7 +46,10 @@ public:
 	void remove(T);
 	const Node<T>* Find(T);
 	std::string print();
+	const Node<T>* inOrderTraversal(const Node<T>*);
+	const Node<T>* GetRoot() { return _root; }
 	
+
 	~RedBlackTree() {
 		DeleteTree(_root);
 	}
@@ -265,11 +268,25 @@ inline void RedBlackTree<T>::fixRbtDelete(Node<T>*)
 
 }
 template<typename T>
-inline void RedBlackTree<T>::remove(T)
+inline void RedBlackTree<T>::remove(T element)
 {
 	if (_root == nullptr)return;
-	_count--;
+	auto temp=Find(element);
+	if (temp == nullptr)return;
+	else {
+
+		_count--;
+	}
 
 }
 
+template<typename T>
+const Node<T>* RedBlackTree<T>::inOrderTraversal(const Node<T>* node)
+{
+	if (node == NULL)
+		return nullptr;
 
+	inOrderTraversal(node->left);
+	std::cout << node->data << "  ";
+	inOrderTraversal(node->right);
+}
