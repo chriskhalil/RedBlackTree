@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RedBlackTree", "RedBlackTree.vcxproj", "{27BCE320-A747-4157-85D2-C9B02122D048}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Map", "..\Map\Map.vcxproj", "{C95D8F18-8CAA-41A1-998A-4463A8291BE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{27BCE320-A747-4157-85D2-C9B02122D048}.Release|x64.Build.0 = Release|x64
 		{27BCE320-A747-4157-85D2-C9B02122D048}.Release|x86.ActiveCfg = Release|Win32
 		{27BCE320-A747-4157-85D2-C9B02122D048}.Release|x86.Build.0 = Release|Win32
+		{C95D8F18-8CAA-41A1-998A-4463A8291BE9}.Debug|x64.ActiveCfg = Debug|x64
+		{C95D8F18-8CAA-41A1-998A-4463A8291BE9}.Debug|x64.Build.0 = Debug|x64
+		{C95D8F18-8CAA-41A1-998A-4463A8291BE9}.Debug|x86.ActiveCfg = Debug|Win32
+		{C95D8F18-8CAA-41A1-998A-4463A8291BE9}.Debug|x86.Build.0 = Debug|Win32
+		{C95D8F18-8CAA-41A1-998A-4463A8291BE9}.Release|x64.ActiveCfg = Release|x64
+		{C95D8F18-8CAA-41A1-998A-4463A8291BE9}.Release|x64.Build.0 = Release|x64
+		{C95D8F18-8CAA-41A1-998A-4463A8291BE9}.Release|x86.ActiveCfg = Release|Win32
+		{C95D8F18-8CAA-41A1-998A-4463A8291BE9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
