@@ -45,6 +45,7 @@ private:
 	void fixRbtDelete(Node<Tk, Tv>*);
 	void DeleteTree(Node<Tk, Tv>*);
 	Node<Tk, Tv>* treeSuccessor(Node <Tk, Tv>*);
+	void transplant(Node <Tk, Tv>*, Node <Tk, Tv>*);
 
 
 public:
@@ -139,10 +140,10 @@ inline void RedBlackTree<Tk, Tv>::leftRotate(Node<Tk, Tv>* x, Node<Tk, Tv>* y)
 {
 	auto temp = y->right;
 	y->right = temp->left;
-	if (y->right != nullptr)
+	if (y->right != _sentinelNill)
 		temp->left->parent = y;
 	temp->parent = y->parent;
-	if (y->parent == nullptr)
+	if (y->parent == _sentinelNill)
 		x->parent = temp;
 	else if (y == y->parent->left)
 		y->parent->left = temp;
@@ -162,10 +163,10 @@ inline void RedBlackTree<Tk, Tv>::rightRotate(Node<Tk, Tv>* x, Node<Tk, Tv>* y)
 {
 	auto temp = y->left;
 	y->left = temp->right;
-	if (y->left != nullptr)
+	if (y->left != _sentinelNill)
 		temp->right->parent = y;
 	temp->parent = y->parent;
-	if (y->parent == nullptr)
+	if (y->parent == _sentinelNill)
 		x->parent = temp;
 	else if (y == y->parent->right)
 		y->parent->right = temp;
@@ -238,58 +239,82 @@ inline void RedBlackTree<Tk, Tv>::fixRbtDelete(Node<Tk, Tv>* x)
 {
 	while (x != _root && x->color == Black)
 	{
-		auto sib = x->parent->right;
-		if (x == x->parent->left) {
-			//case 1
-			if (sib->color == Red) {
-				sib->color = Black;
+		if (x == x->parent->left)
+		{
+			auto w = x->parent->right;
+			if (w->color == Red) {
+				//case 1
+				w->color = Black;
 				x->parent->color = Red;
 				leftRotate(_root, x->parent);
-				sib = x->parent->right;
+				w = x->parent->right;
 			}
-			if (sib->left->color == Black && sib->right->color == Black) {
-				sib->color = Red;
+			if (w->left->color == Black && w->right->color == Black)
+			{
+				//case 2
+				w->color = Red;
 				x = x->parent;
 			}
-			else if (sib->right->color == Black) {
-				sib->left->color = Black;
-				sib->color = Red;
-				rightRotate(_root, sib);
-				sib = x->parent->right;
+			else if (w->right->color == Black) {
+				//case 3
+				w->left->color = Black;
+				w->color = Red;
+				rightRotate(_root, w);
+				w = x->parent->right;
 			}
 			else {
-				sib->color = x->parent->color;
+				//case 4
+				w->color = x->parent->color;
 				x->parent->color = Black;
-				sib->right->color = Black;
+				w->right->color = Black;
 				leftRotate(_root, x->parent);
-				x = _root;
 			}
+			x = _root;
 		}
 		else {
-			if (sib->color == Red) {
-				sib->color = Black;
+			auto w = x->parent->left;
+			if (w->color == Red) {
+				//case 1
+				w->color = Black;
 				x->parent->color = Red;
 				rightRotate(_root, x->parent);
-				sib = x->parent->left;
+				w = x->parent->left;
 			}
-			if (sib->right->color == Black && sib->left->color == Black) {
-				sib->color = Red;
+			if (w->right->color == Black && w->left->color == Black)
+			{
+				//case 2
+				w->color = Red;
 				x = x->parent;
 			}
-			else if (sib->left->color == Black) {
-				sib->right->color = Black;
-				sib->color = Red;
-				leftRotate(_root, sib);
-				sib = x->parent->left;
+			else if (w->left->color == Black) {
+				//case 3
+				w->right->color = Black;
+				w->color = Red;
+				leftRotate(_root, w);
+				w = x->parent->left;
 			}
 			else {
-				sib->color = x->parent->color;
+				//case 4
+				w->color = x->parent->color;
 				x->parent->color = Black;
-				sib->left->color = Black;
+				w->left->color = Black;
 				rightRotate(_root, x->parent);
-				x = _root;
 			}
+			x = _root;
 		}
+	}
+	x->color = Black;
+}
+template<typename Tk, typename Tv>
+inline void RedBlackTree<Tk, Tv>::transplant(Node <Tk, Tv>*u, Node <Tk, Tv>*v) {
+	if (u->parent == _sentinelNill)
+		_root = v;
+	else if (u == u->parent->left)
+		u->parent->left = v;
+	else
+	{
+		u->parent->right = v;
+		v->parent = u->parent;
 	}
 }
 #pragma endregion
@@ -307,21 +332,26 @@ inline void RedBlackTree<Tk, Tv>::insert(const std::pair<Tk, Tv> element) {
 	//do not fix if we insert root
 	if (_count > 1)
 		fixRbtInsert(temporal_node);
+	else
+		_root->parent = _sentinelNill;
 }
 template<typename Tk, typename Tv>
 inline void RedBlackTree<Tk, Tv>::insert(Node<Tk, Tv>* node) {
+	node->right = node->left = _sentinelNill;
 	binarySearchTreeInsert(_root, node);
 	_count++;
 	//check red black tree for violation
 	//do not fix if we insert root
 	if (_count > 1)
 		fixRbtInsert(node);
+	else
+		_root->parent = _sentinelNill;
 }
 template<typename Tk, typename Tv>
 inline Node<Tk, Tv>* RedBlackTree<Tk, Tv>::Find(Tk key) {
 	auto node = _root;
 	if (_root == nullptr) return nullptr;
-	while (node != nullptr) {
+	while (node != _sentinelNill) {
 		if (key < node->_myval.first) {
 			std::cout << "At node " << node->_myval.first << " going left\n";
 			node = node->left;
@@ -341,14 +371,14 @@ inline Node<Tk, Tv>* RedBlackTree<Tk, Tv>::Find(Tk key) {
 template<typename Tk, typename Tv>
 inline Node<Tk, Tv>* RedBlackTree<Tk, Tv>::findMin(Node<Tk, Tv>* node) {
 	auto temp = node;
-	while (temp->left != nullptr)
+	while (temp->left != _sentinelNill)
 		temp = temp->left;
 	return temp;
 }
 template<typename Tk, typename Tv>
 inline Node<Tk, Tv>* RedBlackTree<Tk, Tv>::findMax(Node<Tk, Tv>* node) {
 	auto temp = node;
-	while (temp->right != nullptr)
+	while (temp->right != _sentinelNill)
 		temp = temp->right;
 	return temp;
 }
@@ -356,39 +386,41 @@ inline Node<Tk, Tv>* RedBlackTree<Tk, Tv>::findMax(Node<Tk, Tv>* node) {
 template<typename Tk, typename Tv>
 inline void RedBlackTree<Tk, Tv>::remove(Tk key)
 {
-	if (_root == nullptr)return;
-	Node<Tk,Tv>* temp = Find(key);
-	if (temp == nullptr)return;
-	else {
-		Node<Tk, Tv>* x;
-		Node<Tk, Tv>* y;
-		if (temp->left == nullptr || temp->right == nullptr)
-			y = temp;
-		else
-			//get the inorder successor of the current node
-			y = treeSuccessor(temp);
-		if (y->left != nullptr)
-			x = y->left;
-		else
-			x = y->right;
-		x->parent = y->parent;
-		if (y->parent == nullptr)
-			_root = x;
-		else if (y == y->parent->left)
-			y->parent->left = x;
-		else
-			y->parent->right = x;
+	auto node = Find(key);
+	//no node with given key
+	if (node == _sentinelNill || node == nullptr) return;
 
-		if (y != temp) {
-			temp = nullptr;
-			temp=y;
-		}
-		if (y->color == Black)
-			fixRbtDelete(x);
-		_count--;
-		//return y;
-		delete y;
+	auto y = node;
+	bool y_original_color = y->color;
+
+	Node<Tk, Tv>* x;
+	if (node->left == _sentinelNill) {
+		x = node->right;
+		transplant(node, node->right);
 	}
+	else if (node->right == _sentinelNill) {
+		x = node->left;
+		transplant(node, node->left);
+	}
+	else {
+		y = findMin(node->right);
+		y_original_color = y->color;
+		x = y->right;
+		if (y->parent == node) {
+			x->parent = y;
+		}
+		else {
+			transplant(y, y->right);
+			y->right = node->right;
+			y->right->parent = y;
+		}
+		transplant(node, y);
+		y->left = node->left;
+		y->left->parent = y;
+		y->color = node->color;
+	}
+	if (y_original_color == Black)
+		fixRbtDelete(x);
 
 }
 #pragma endregion
